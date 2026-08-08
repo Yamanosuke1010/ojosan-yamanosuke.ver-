@@ -1,0 +1,1 @@
+# ojosan-yamanosuke.ver-
