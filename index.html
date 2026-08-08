@@ -82,13 +82,34 @@
   .photo-slot.angry-slot:hover{ transform:rotate(1deg) scale(1.02); }
   .photo-slot:active{ transform:rotate(-1deg) scale(.97); }
   .photo-slot.angry-slot:active{ transform:rotate(1deg) scale(.97); }
-  .photo-slot-inner{ width:100%; aspect-ratio:1/1; border-radius:4px; border:2px dashed var(--teal); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; overflow:hidden; background:#F3E9D2; }
+  .photo-slot-inner{ position:relative; width:100%; aspect-ratio:1/1; border-radius:4px; border:2px dashed var(--teal); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; overflow:hidden; background:#F3E9D2; }
   .angry-slot .photo-slot-inner{ border-color:var(--red); }
   .photo-slot-inner.has-image{ border-style:solid; }
   .photo-slot-inner img{ width:100%; height:100%; object-fit:cover; }
   .photo-icon{ font-size:1.6rem; }
   .photo-text{ font-family:'M PLUS Rounded 1c', sans-serif; font-size:.68rem; text-align:center; color:var(--box-dark); font-weight:700; line-height:1.35; padding:0 6px; }
-  .photo-hint{ text-align:center; font-size:.74rem; color:var(--box-dark); margin:12px 0 20px; line-height:1.5; }
+  .photo-hint{ text-align:center; font-size:.74rem; color:var(--box-dark); margin:12px 0 16px; line-height:1.5; }
+
+  .default-tag{ position:absolute; bottom:4px; left:50%; transform:translateX(-50%); background:rgba(43,33,24,.7); color:#fff; font-size:.55rem; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; font-family:'M PLUS Rounded 1c', sans-serif; }
+
+  .photo-slot-wrap{ position:relative; }
+  .photo-clear-btn{ position:absolute; top:-8px; right:-8px; width:26px; height:26px; border-radius:50%; background:var(--red); color:#fff; border:2px solid #fff; font-size:.72rem; font-weight:800; box-shadow:0 2px 5px rgba(0,0,0,.28); cursor:pointer; z-index:3; line-height:1; }
+  .photo-clear-btn:active{ transform:scale(.9); }
+
+  /* ---------- Default style picker ---------- */
+  .style-section{ margin-top:4px; }
+  .style-section-title{ font-family:'M PLUS Rounded 1c', sans-serif; font-weight:800; font-size:.86rem; text-align:center; margin:0 0 12px; color:var(--box-dark); }
+  .style-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+  .style-card{ position:relative; background:var(--paper); border:3px solid transparent; border-radius:14px; padding:8px 4px 6px; box-shadow:0 4px 10px rgba(0,0,0,.16); cursor:pointer; text-align:center; transition:transform .15s, border-color .15s; }
+  .style-card:active{ transform:scale(.95); }
+  .style-card.is-selected{ border-color:var(--teal); background:#fff; }
+  .style-thumbs{ display:flex; justify-content:center; align-items:center; gap:4px; margin-bottom:5px; }
+  .style-thumb{ width:38px; height:38px; border-radius:50%; object-fit:cover; background:#F3E9D2; border:1px solid rgba(43,33,24,.12); }
+  .style-thumb-angry{ border-color:rgba(232,67,47,.35); }
+  .style-name{ display:block; font-family:'M PLUS Rounded 1c', sans-serif; font-size:.64rem; font-weight:700; color:var(--box-dark); line-height:1.3; }
+  .style-check{ position:absolute; top:-7px; right:-7px; width:20px; height:20px; border-radius:50%; background:var(--teal); color:#fff; font-size:.65rem; display:flex; align-items:center; justify-content:center; opacity:0; transform:scale(.5); transition:opacity .15s, transform .15s; box-shadow:0 2px 5px rgba(0,0,0,.28); }
+  .style-card.is-selected .style-check{ opacity:1; transform:scale(1); }
+  .style-hint{ text-align:center; font-size:.7rem; color:var(--box-dark); margin:12px 0 4px; line-height:1.5; }
 
   .option-row{ display:flex; align-items:center; justify-content:space-between; margin:16px 4px; }
   .option-label{ font-family:'M PLUS Rounded 1c', sans-serif; font-weight:700; color:var(--box-dark); font-size:.95rem; }
@@ -309,26 +330,38 @@
       <div class="photo-row">
         <div class="photo-block">
           <p class="photo-label safe-label">通常の顔</p>
-          <button type="button" id="photo-slot-normal" class="photo-slot" aria-label="通常の顔写真を追加">
-            <div class="photo-slot-inner" id="photo-preview-normal">
-              <span class="photo-icon">🙂</span>
-              <span class="photo-text">PNGのみ<br>顔を追加</span>
-            </div>
-          </button>
+          <div class="photo-slot-wrap">
+            <button type="button" id="photo-slot-normal" class="photo-slot" aria-label="通常の顔写真を追加">
+              <div class="photo-slot-inner" id="photo-preview-normal">
+                <span class="photo-icon">🙂</span>
+                <span class="photo-text">PNGのみ<br>顔を追加</span>
+              </div>
+            </button>
+            <button type="button" id="photo-clear-normal" class="photo-clear-btn" aria-label="追加した写真を削除してデフォルトに戻す" hidden>✕</button>
+          </div>
         </div>
         <div class="photo-block">
           <p class="photo-label angry-label">怒った顔</p>
-          <button type="button" id="photo-slot-angry" class="photo-slot angry-slot" aria-label="怒った顔写真を追加">
-            <div class="photo-slot-inner" id="photo-preview-angry">
-              <span class="photo-icon">😠</span>
-              <span class="photo-text">PNGのみ<br>顔を追加</span>
-            </div>
-          </button>
+          <div class="photo-slot-wrap">
+            <button type="button" id="photo-slot-angry" class="photo-slot angry-slot" aria-label="怒った顔写真を追加">
+              <div class="photo-slot-inner" id="photo-preview-angry">
+                <span class="photo-icon">😠</span>
+                <span class="photo-text">PNGのみ<br>顔を追加</span>
+              </div>
+            </button>
+            <button type="button" id="photo-clear-angry" class="photo-clear-btn" aria-label="追加した写真を削除してデフォルトに戻す" hidden>✕</button>
+          </div>
         </div>
       </div>
       <input type="file" id="photo-input-normal" accept="image/png" hidden>
       <input type="file" id="photo-input-angry" accept="image/png" hidden>
-      <p class="photo-hint">透明背景のPNG画像のみ追加できます（追加しなくてもサンプル顔で遊べます）</p>
+      <p class="photo-hint">透明背景のPNG画像を追加すると、自分だけの顔で遊べます（追加しなくても、下のデフォルトのかおで遊べます）</p>
+
+      <div class="style-section">
+        <p class="style-section-title">デフォルトのかおを選ぶ</p>
+        <div class="style-grid" id="style-grid"></div>
+        <p class="style-hint">※ 上で写真を追加した場合は、そちらが優先されます</p>
+      </div>
     </div>
   </section>
 
@@ -372,6 +405,26 @@
   var REACTIONS = ["やあ!","ういーす","ほい!","またね!","どうも!","べー!","よっ!","はろー!","おっす!","ばいばい!","げんき?","よいしょ!","おつかれ!","にひひ","わーい!","てへっ","ういっす","ちわっす","へーい!","じゃあね!"];
   var PLAYER_COLORS = ["#E8432F","#2F8F82","#3D6FB4","#C9A227","#7B4B94","#4C8C4A","#D4638B","#DD8A2E"];
 
+  /* ---------- default face styles ---------- */
+  var FACE_STYLES = [
+    { id:'ojisan',     name:'ヒゲおじさん',     skin:'#F0C8A0', angrySkin:'#F5B8A8', hair:'#2B2118', hairStyle:'sides',     facial:'mustache',      accessory:null },
+    { id:'megane',     name:'メガネおじさん',   skin:'#F0C8A0', angrySkin:'#F5B8A8', hair:'#3A3A3A', hairStyle:'sidepart',  facial:'none',           accessory:'glasses' },
+    { id:'skinhead',   name:'スキンヘッド',     skin:'#E8B58C', angrySkin:'#F0A888', hair:'#2B2118', hairStyle:'bald',      facial:'goatee',         accessory:null },
+    { id:'hachimaki',  name:'ハチマキおじさん', skin:'#F0C8A0', angrySkin:'#F5B8A8', hair:'#2B2118', hairStyle:'spiky',     facial:'none',           accessory:'hachimaki' },
+    { id:'perm',       name:'パーマおじさん',   skin:'#EAC49A', angrySkin:'#F2B49C', hair:'#5A3A20', hairStyle:'perm',      facial:'thinmustache',   accessory:null },
+    { id:'sunglasses', name:'サングラス',       skin:'#DDB48A', angrySkin:'#E8A888', hair:'#1F1F1F', hairStyle:'slick',     facial:'goatee',         accessory:'sunglasses' }
+  ];
+  var faceCache = {};
+  function getStyleById(id){
+    for (var i = 0; i < FACE_STYLES.length; i++){ if (FACE_STYLES[i].id === id) return FACE_STYLES[i]; }
+    return FACE_STYLES[0];
+  }
+  function getStyleFaceDataURL(styleId, isAngry){
+    var key = styleId + '_' + (isAngry ? 'angry' : 'normal');
+    if (!faceCache[key]){ faceCache[key] = generateFaceDataURL(getStyleById(styleId), isAngry); }
+    return faceCache[key];
+  }
+
   var els = {
     openSettingsBtn: document.getElementById('open-settings-btn'),
     settingsCloseBtn: document.getElementById('settings-close-btn'),
@@ -381,6 +434,9 @@
     photoSlotAngry: document.getElementById('photo-slot-angry'),
     photoInputAngry: document.getElementById('photo-input-angry'),
     photoPreviewAngry: document.getElementById('photo-preview-angry'),
+    photoClearNormal: document.getElementById('photo-clear-normal'),
+    photoClearAngry: document.getElementById('photo-clear-angry'),
+    styleGrid: document.getElementById('style-grid'),
     playerMinus: document.getElementById('player-minus'),
     playerPlus: document.getElementById('player-plus'),
     playerCount: document.getElementById('player-count'),
@@ -400,6 +456,9 @@
   var state = {
     normalFaceSrc: null,
     angryFaceSrc: null,
+    customNormalSrc: null,
+    customAngrySrc: null,
+    selectedStyleId: 'ojisan',
     numPlayers: 1,
     numCells: 16,
     players: [],
@@ -477,81 +536,67 @@
     });
   }
 
-  function generateNormalPlaceholder(){
-    var size = 400;
-    var canvas = els.cropCanvas;
-    canvas.width = size;
-    canvas.height = size;
-    var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, size, size);
-    // head
-    ctx.fillStyle = '#F0C8A0';
+  /* ---------- default face drawing (parameterized so many styles share one engine) ---------- */
+  function drawHead(ctx, size, style, isAngry){
+    var skin = isAngry ? style.angrySkin : style.skin;
+    ctx.fillStyle = skin;
     ctx.beginPath();
-    ctx.ellipse(size/2, size*0.52, size*0.40, size*0.44, 0, 0, Math.PI*2);
+    ctx.ellipse(size/2, size*0.52, size*(isAngry ? 0.42 : 0.40), size*(isAngry ? 0.46 : 0.44), 0, 0, Math.PI*2);
     ctx.fill();
     ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * 0.02;
+    ctx.lineWidth = size * (isAngry ? 0.022 : 0.02);
     ctx.stroke();
     // ears
-    ctx.fillStyle = '#F0C8A0';
+    ctx.fillStyle = skin;
     ctx.beginPath(); ctx.ellipse(size*0.13, size*0.52, size*0.065, size*0.10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.ellipse(size*0.87, size*0.52, size*0.065, size*0.10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-    // hair sides
-    ctx.fillStyle = '#2B2118';
-    ctx.beginPath(); ctx.ellipse(size*0.18, size*0.32, size*0.06, size*0.04, -0.4, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(size*0.82, size*0.32, size*0.06, size*0.04, 0.4, 0, Math.PI*2); ctx.fill();
-    // eyebrows
-    ctx.lineWidth = size * 0.028;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(size*0.26, size*0.40); ctx.lineTo(size*0.42, size*0.39);
-    ctx.moveTo(size*0.74, size*0.40); ctx.lineTo(size*0.58, size*0.39);
-    ctx.stroke();
-    // eyes
-    ctx.fillStyle = '#2B2118';
-    ctx.beginPath(); ctx.ellipse(size*0.35, size*0.48, size*0.045, size*0.032, 0, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(size*0.65, size*0.48, size*0.045, size*0.032, 0, 0, Math.PI*2); ctx.fill();
-    // nose
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * 0.016;
-    ctx.beginPath();
-    ctx.moveTo(size*0.5, size*0.50); ctx.quadraticCurveTo(size*0.56, size*0.60, size*0.47, size*0.64);
-    ctx.stroke();
-    // mouth
-    ctx.beginPath();
-    ctx.arc(size/2, size*0.68, size*0.13, 0.15*Math.PI, 0.85*Math.PI);
-    ctx.lineWidth = size * 0.02;
-    ctx.stroke();
-    // stubble
-    ctx.fillStyle = '#C49A7A';
-    for(var i=0;i<12;i++){
-      var sx = size*(0.40 + Math.random()*0.20);
-      var sy = size*(0.66 + Math.random()*0.05);
-      ctx.beginPath(); ctx.arc(sx, sy, size*0.005, 0, Math.PI*2); ctx.fill();
-    }
-    return canvas.toDataURL('image/png');
   }
-
-  function generateAngryPlaceholder(){
-    var size = 400;
-    var canvas = els.cropCanvas;
-    canvas.width = size;
-    canvas.height = size;
-    var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, size, size);
-    // head
-    ctx.fillStyle = '#F5B8A8';
-    ctx.beginPath();
-    ctx.ellipse(size/2, size*0.52, size*0.42, size*0.46, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * 0.022;
-    ctx.stroke();
-    // ears
-    ctx.fillStyle = '#F5B8A8';
-    ctx.beginPath(); ctx.ellipse(size*0.12, size*0.52, size*0.07, size*0.11, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.ellipse(size*0.88, size*0.52, size*0.07, size*0.11, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-    // forehead marks
+  function drawHair(ctx, size, style){
+    ctx.fillStyle = style.hair;
+    switch (style.hairStyle){
+      case 'sides':
+        ctx.beginPath(); ctx.ellipse(size*0.18, size*0.32, size*0.06, size*0.04, -0.4, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(size*0.82, size*0.32, size*0.06, size*0.04, 0.4, 0, Math.PI*2); ctx.fill();
+        break;
+      case 'sidepart':
+        ctx.beginPath();
+        ctx.moveTo(size*0.16, size*0.30);
+        ctx.quadraticCurveTo(size*0.30, size*0.05, size*0.56, size*0.09);
+        ctx.quadraticCurveTo(size*0.76, size*0.11, size*0.84, size*0.28);
+        ctx.quadraticCurveTo(size*0.55, size*0.15, size*0.16, size*0.30);
+        ctx.closePath(); ctx.fill();
+        break;
+      case 'bald':
+        ctx.fillStyle = 'rgba(255,255,255,.55)';
+        ctx.beginPath(); ctx.ellipse(size*0.42, size*0.21, size*0.10, size*0.045, -0.2, 0, Math.PI*2); ctx.fill();
+        break;
+      case 'spiky':
+        for (var i = 0; i < 5; i++){
+          var bx = size*(0.30 + i*0.10);
+          ctx.beginPath();
+          ctx.moveTo(bx - size*0.035, size*0.22);
+          ctx.lineTo(bx, size*0.06);
+          ctx.lineTo(bx + size*0.035, size*0.22);
+          ctx.closePath(); ctx.fill();
+        }
+        break;
+      case 'perm':
+        for (var j = 0; j < 7; j++){
+          var cx = size*(0.23 + j*0.077);
+          var cy = size*(0.20 + (j % 2)*0.035);
+          ctx.beginPath(); ctx.arc(cx, cy, size*0.052, 0, Math.PI*2); ctx.fill();
+        }
+        break;
+      case 'slick':
+        ctx.beginPath();
+        ctx.moveTo(size*0.14, size*0.31);
+        ctx.quadraticCurveTo(size*0.5, size*0.03, size*0.86, size*0.31);
+        ctx.quadraticCurveTo(size*0.5, size*0.17, size*0.14, size*0.31);
+        ctx.closePath(); ctx.fill();
+        break;
+    }
+  }
+  function drawForeheadMarks(ctx, size){
     ctx.strokeStyle = '#2B2118';
     ctx.lineWidth = size * 0.018;
     ctx.lineCap = 'round';
@@ -561,48 +606,140 @@
     ctx.moveTo(size*0.68, size*0.22); ctx.lineTo(size*0.76, size*0.30);
     ctx.moveTo(size*0.76, size*0.22); ctx.lineTo(size*0.68, size*0.30);
     ctx.stroke();
-    // eyebrows
-    ctx.lineWidth = size * 0.035;
-    ctx.beginPath();
-    ctx.moveTo(size*0.22, size*0.38); ctx.lineTo(size*0.42, size*0.42);
-    ctx.moveTo(size*0.78, size*0.38); ctx.lineTo(size*0.58, size*0.42);
-    ctx.stroke();
-    // eyes
-    ctx.fillStyle = '#2B2118';
-    ctx.beginPath(); ctx.ellipse(size*0.34, size*0.48, size*0.05, size*0.035, -0.2, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(size*0.66, size*0.48, size*0.05, size*0.035, 0.2, 0, Math.PI*2); ctx.fill();
-    // nose
+  }
+  function drawEyebrows(ctx, size, isAngry){
     ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * 0.02;
+    ctx.lineCap = 'round';
     ctx.beginPath();
-    ctx.moveTo(size*0.5, size*0.48); ctx.quadraticCurveTo(size*0.58, size*0.62, size*0.46, size*0.66);
-    ctx.stroke();
-    // mouth
-    ctx.fillStyle = '#E88A5A';
-    ctx.beginPath();
-    ctx.ellipse(size/2, size*0.78, size*0.18, size*0.08, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * 0.018;
-    ctx.stroke();
-    // teeth
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(size*0.38, size*0.74, size*0.24, size*0.07);
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * 0.012;
-    ctx.strokeRect(size*0.38, size*0.74, size*0.24, size*0.07);
-    ctx.beginPath();
-    ctx.moveTo(size*0.44, size*0.74); ctx.lineTo(size*0.44, size*0.81);
-    ctx.moveTo(size*0.50, size*0.74); ctx.lineTo(size*0.50, size*0.81);
-    ctx.moveTo(size*0.56, size*0.74); ctx.lineTo(size*0.56, size*0.81);
-    ctx.stroke();
-    // stubble
-    ctx.fillStyle = '#8B5A4A';
-    for(var i=0;i<18;i++){
-      var sx = size*(0.38 + Math.random()*0.24);
-      var sy = size*(0.68 + Math.random()*0.06);
-      ctx.beginPath(); ctx.arc(sx, sy, size*0.006, 0, Math.PI*2); ctx.fill();
+    if (isAngry){
+      ctx.lineWidth = size * 0.035;
+      ctx.moveTo(size*0.22, size*0.38); ctx.lineTo(size*0.42, size*0.42);
+      ctx.moveTo(size*0.78, size*0.38); ctx.lineTo(size*0.58, size*0.42);
+    } else {
+      ctx.lineWidth = size * 0.028;
+      ctx.moveTo(size*0.26, size*0.40); ctx.lineTo(size*0.42, size*0.39);
+      ctx.moveTo(size*0.74, size*0.40); ctx.lineTo(size*0.58, size*0.39);
     }
+    ctx.stroke();
+  }
+  function drawEyes(ctx, size, isAngry){
+    ctx.fillStyle = '#2B2118';
+    if (isAngry){
+      ctx.beginPath(); ctx.ellipse(size*0.34, size*0.48, size*0.05, size*0.035, -0.2, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(size*0.66, size*0.48, size*0.05, size*0.035, 0.2, 0, Math.PI*2); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.ellipse(size*0.35, size*0.48, size*0.045, size*0.032, 0, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(size*0.65, size*0.48, size*0.045, size*0.032, 0, 0, Math.PI*2); ctx.fill();
+    }
+  }
+  function drawNose(ctx, size, isAngry){
+    ctx.strokeStyle = '#2B2118';
+    ctx.lineWidth = size * (isAngry ? 0.02 : 0.016);
+    ctx.beginPath();
+    if (isAngry){
+      ctx.moveTo(size*0.5, size*0.48); ctx.quadraticCurveTo(size*0.58, size*0.62, size*0.46, size*0.66);
+    } else {
+      ctx.moveTo(size*0.5, size*0.50); ctx.quadraticCurveTo(size*0.56, size*0.60, size*0.47, size*0.64);
+    }
+    ctx.stroke();
+  }
+  function drawMouth(ctx, size, isAngry){
+    if (isAngry){
+      ctx.fillStyle = '#E88A5A';
+      ctx.beginPath(); ctx.ellipse(size/2, size*0.78, size*0.18, size*0.08, 0, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.018; ctx.stroke();
+      ctx.fillStyle = '#FFF';
+      ctx.fillRect(size*0.38, size*0.74, size*0.24, size*0.07);
+      ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.012;
+      ctx.strokeRect(size*0.38, size*0.74, size*0.24, size*0.07);
+      ctx.beginPath();
+      ctx.moveTo(size*0.44, size*0.74); ctx.lineTo(size*0.44, size*0.81);
+      ctx.moveTo(size*0.50, size*0.74); ctx.lineTo(size*0.50, size*0.81);
+      ctx.moveTo(size*0.56, size*0.74); ctx.lineTo(size*0.56, size*0.81);
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.02;
+      ctx.beginPath();
+      ctx.arc(size/2, size*0.68, size*0.13, 0.15*Math.PI, 0.85*Math.PI);
+      ctx.stroke();
+    }
+  }
+  function drawFacial(ctx, size, style){
+    ctx.fillStyle = style.hair;
+    switch (style.facial){
+      case 'mustache':
+        ctx.beginPath();
+        ctx.moveTo(size*0.38, size*0.60);
+        ctx.quadraticCurveTo(size*0.5, size*0.665, size*0.62, size*0.60);
+        ctx.quadraticCurveTo(size*0.5, size*0.635, size*0.38, size*0.60);
+        ctx.closePath(); ctx.fill();
+        break;
+      case 'thinmustache':
+        ctx.strokeStyle = style.hair;
+        ctx.lineWidth = size * 0.016;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(size*0.40, size*0.605); ctx.lineTo(size*0.60, size*0.605);
+        ctx.stroke();
+        break;
+      case 'goatee':
+        ctx.beginPath();
+        ctx.ellipse(size*0.5, size*0.80, size*0.075, size*0.10, 0, 0, Math.PI*2);
+        ctx.fill();
+        break;
+    }
+  }
+  function drawAccessory(ctx, size, style){
+    switch (style.accessory){
+      case 'glasses':
+        ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.018;
+        ctx.beginPath(); ctx.ellipse(size*0.35, size*0.48, size*0.09, size*0.07, 0, 0, Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(size*0.65, size*0.48, size*0.09, size*0.07, 0, 0, Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(size*0.44, size*0.48); ctx.lineTo(size*0.56, size*0.48); ctx.stroke();
+        break;
+      case 'sunglasses':
+        ctx.fillStyle = '#1a1a1a';
+        ctx.beginPath(); ctx.ellipse(size*0.35, size*0.48, size*0.10, size*0.075, 0, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(size*0.65, size*0.48, size*0.10, size*0.075, 0, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = size * 0.02;
+        ctx.beginPath(); ctx.moveTo(size*0.45, size*0.48); ctx.lineTo(size*0.55, size*0.48); ctx.stroke();
+        break;
+      case 'hachimaki':
+        ctx.fillStyle = '#E8432F';
+        ctx.fillRect(size*0.10, size*0.185, size*0.80, size*0.085);
+        ctx.beginPath(); ctx.ellipse(size*0.87, size*0.22, size*0.028, size*0.05, 0.3, 0, Math.PI*2); ctx.fill();
+        break;
+    }
+  }
+  function drawStubble(ctx, size, isAngry){
+    ctx.fillStyle = isAngry ? '#8B5A4A' : '#C49A7A';
+    var count = isAngry ? 18 : 12;
+    var spanX = isAngry ? 0.24 : 0.20;
+    var spanY = isAngry ? 0.06 : 0.05;
+    var baseY = isAngry ? 0.68 : 0.66;
+    for (var i = 0; i < count; i++){
+      var sx = size*((isAngry ? 0.38 : 0.40) + Math.random()*spanX);
+      var sy = size*(baseY + Math.random()*spanY);
+      ctx.beginPath(); ctx.arc(sx, sy, size*(isAngry ? 0.006 : 0.005), 0, Math.PI*2); ctx.fill();
+    }
+  }
+  function generateFaceDataURL(style, isAngry){
+    var size = 400;
+    var canvas = els.cropCanvas;
+    canvas.width = size;
+    canvas.height = size;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, size, size);
+    drawHead(ctx, size, style, isAngry);
+    drawHair(ctx, size, style);
+    if (isAngry) drawForeheadMarks(ctx, size);
+    drawEyebrows(ctx, size, isAngry);
+    drawEyes(ctx, size, isAngry);
+    drawNose(ctx, size, isAngry);
+    drawMouth(ctx, size, isAngry);
+    drawFacial(ctx, size, style);
+    drawAccessory(ctx, size, style);
+    drawStubble(ctx, size, isAngry);
     return canvas.toDataURL('image/png');
   }
 
@@ -701,23 +838,83 @@
   });
 
   /* ---------- settings interactions ---------- */
-  function wirePhotoSlot(slotBtn, inputEl, previewEl, hintUpdater, onLoaded){
+  function updatePhotoPreviews(){
+    if (state.customNormalSrc){
+      els.photoPreviewNormal.classList.add('has-image');
+      els.photoPreviewNormal.innerHTML = '<img src="' + state.customNormalSrc + '" alt="追加した通常の顔">';
+      els.photoClearNormal.hidden = false;
+    } else {
+      els.photoPreviewNormal.classList.add('has-image');
+      els.photoPreviewNormal.innerHTML = '<img src="' + getStyleFaceDataURL(state.selectedStyleId, false) + '" alt="デフォルトの通常の顔"><span class="default-tag">デフォルト</span>';
+      els.photoClearNormal.hidden = true;
+    }
+    if (state.customAngrySrc){
+      els.photoPreviewAngry.classList.add('has-image');
+      els.photoPreviewAngry.innerHTML = '<img src="' + state.customAngrySrc + '" alt="追加した怒った顔">';
+      els.photoClearAngry.hidden = false;
+    } else {
+      els.photoPreviewAngry.classList.add('has-image');
+      els.photoPreviewAngry.innerHTML = '<img src="' + getStyleFaceDataURL(state.selectedStyleId, true) + '" alt="デフォルトの怒った顔"><span class="default-tag">デフォルト</span>';
+      els.photoClearAngry.hidden = true;
+    }
+  }
+  function renderStyleGrid(){
+    els.styleGrid.innerHTML = '';
+    for (var i = 0; i < FACE_STYLES.length; i++){
+      (function(st){
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'style-card' + (st.id === state.selectedStyleId ? ' is-selected' : '');
+        card.setAttribute('data-style', st.id);
+        card.setAttribute('aria-label', st.name + 'を選ぶ');
+        card.innerHTML =
+          '<span class="style-check" aria-hidden="true">✓</span>' +
+          '<span class="style-thumbs">' +
+            '<img class="style-thumb" src="' + getStyleFaceDataURL(st.id, false) + '" alt="' + st.name + ' 通常の顔">' +
+            '<img class="style-thumb style-thumb-angry" src="' + getStyleFaceDataURL(st.id, true) + '" alt="' + st.name + ' 怒った顔">' +
+          '</span>' +
+          '<span class="style-name">' + st.name + '</span>';
+        card.addEventListener('click', function(){
+          state.selectedStyleId = st.id;
+          var cards = els.styleGrid.querySelectorAll('.style-card');
+          for (var j = 0; j < cards.length; j++){ cards[j].classList.remove('is-selected'); }
+          card.classList.add('is-selected');
+          updatePhotoPreviews();
+        });
+        els.styleGrid.appendChild(card);
+      })(FACE_STYLES[i]);
+    }
+  }
+  function wirePhotoSlot(slotBtn, inputEl, onLoaded){
     slotBtn.addEventListener('click', function(){ inputEl.click(); });
     inputEl.addEventListener('change', function(e){
       var file = e.target.files && e.target.files[0];
       if (!file) return;
       cropToPortraitDataURL(file).then(function(dataUrl){
         onLoaded(dataUrl);
-        previewEl.classList.add('has-image');
-        previewEl.innerHTML = '<img src="' + dataUrl + '" alt="追加した顔">';
-        if (hintUpdater) hintUpdater();
+        updatePhotoPreviews();
       }).catch(function(){
         alert('画像の読み込みに失敗しました。別の画像でお試しください。');
       });
     });
   }
-  wirePhotoSlot(els.photoSlotNormal, els.photoInputNormal, els.photoPreviewNormal, null, function(dataUrl){ state.normalFaceSrc = dataUrl; });
-  wirePhotoSlot(els.photoSlotAngry, els.photoInputAngry, els.photoPreviewAngry, null, function(dataUrl){ state.angryFaceSrc = dataUrl; });
+  wirePhotoSlot(els.photoSlotNormal, els.photoInputNormal, function(dataUrl){ state.customNormalSrc = dataUrl; });
+  wirePhotoSlot(els.photoSlotAngry, els.photoInputAngry, function(dataUrl){ state.customAngrySrc = dataUrl; });
+  els.photoClearNormal.addEventListener('click', function(e){
+    e.stopPropagation();
+    state.customNormalSrc = null;
+    els.photoInputNormal.value = '';
+    updatePhotoPreviews();
+  });
+  els.photoClearAngry.addEventListener('click', function(e){
+    e.stopPropagation();
+    state.customAngrySrc = null;
+    els.photoInputAngry.value = '';
+    updatePhotoPreviews();
+  });
+  renderStyleGrid();
+  updatePhotoPreviews();
+
   els.playerMinus.addEventListener('click', function(){
     state.numPlayers = Math.max(1, state.numPlayers - 1);
     els.playerCount.textContent = state.numPlayers;
@@ -738,8 +935,8 @@
 
   /* ---------- game logic ---------- */
   function startGame(){
-    if (!state.normalFaceSrc){ state.normalFaceSrc = generateNormalPlaceholder(); }
-    if (!state.angryFaceSrc){ state.angryFaceSrc = generateAngryPlaceholder(); }
+    state.normalFaceSrc = state.customNormalSrc || getStyleFaceDataURL(state.selectedStyleId, false);
+    state.angryFaceSrc = state.customAngrySrc || getStyleFaceDataURL(state.selectedStyleId, true);
 
     state.players = [];
     for (var p = 0; p < state.numPlayers; p++){ state.players.push('プレイヤー' + (p + 1)); }
