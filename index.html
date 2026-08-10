@@ -42,6 +42,7 @@
   @keyframes fadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
 
   .icon-btn{ background:var(--paper); border:none; border-radius:50%; width:42px; height:42px; font-size:1.15rem; box-shadow:0 3px 6px rgba(0,0,0,.15); cursor:pointer; flex:0 0 auto; }
+  .icon-btn-spacer{ width:42px; height:42px; flex:0 0 auto; }
   .icon-btn:active{ transform:scale(.92); }
 
   /* ---------- Top screen ---------- */
@@ -82,7 +83,7 @@
   .photo-slot.angry-slot:hover{ transform:rotate(1deg) scale(1.02); }
   .photo-slot:active{ transform:rotate(-1deg) scale(.97); }
   .photo-slot.angry-slot:active{ transform:rotate(1deg) scale(.97); }
-  .photo-slot-inner{ position:relative; width:100%; aspect-ratio:1/1; border-radius:4px; border:2px dashed var(--teal); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; overflow:hidden; background:#F3E9D2; }
+  .photo-slot-inner{ position:relative; width:100%; aspect-ratio:3/4; border-radius:4px; border:2px dashed var(--teal); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; overflow:hidden; background:#F3E9D2; }
   .angry-slot .photo-slot-inner{ border-color:var(--red); }
   .photo-slot-inner.has-image{ border-style:solid; }
   .photo-slot-inner img{ width:100%; height:100%; object-fit:cover; }
@@ -104,7 +105,7 @@
   .style-card:active{ transform:scale(.95); }
   .style-card.is-selected{ border-color:var(--teal); background:#fff; }
   .style-thumbs{ display:flex; justify-content:center; align-items:center; gap:4px; margin-bottom:5px; }
-  .style-thumb{ width:38px; height:38px; border-radius:50%; object-fit:cover; background:#F3E9D2; border:1px solid rgba(43,33,24,.12); }
+  .style-thumb{ width:34px; height:45px; border-radius:8px; object-fit:cover; background:#F3E9D2; border:1px solid rgba(43,33,24,.12); }
   .style-thumb-angry{ border-color:rgba(232,67,47,.35); }
   .style-name{ display:block; font-family:'M PLUS Rounded 1c', sans-serif; font-size:.64rem; font-weight:700; color:var(--box-dark); line-height:1.3; }
   .style-check{ position:absolute; top:-7px; right:-7px; width:20px; height:20px; border-radius:50%; background:var(--teal); color:#fff; font-size:.65rem; display:flex; align-items:center; justify-content:center; opacity:0; transform:scale(.5); transition:opacity .15s, transform .15s; box-shadow:0 2px 5px rgba(0,0,0,.28); }
@@ -143,7 +144,7 @@
   .cell-content{ position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center; opacity:1; transform:translateY(0); background:transparent; }
   .cell.is-flying{ z-index: 50; overflow: visible; }
   .cell.is-flying .cell-content{ 
-    animation:slideUp .75s cubic-bezier(.25,.8,.25,1) forwards; 
+    animation:slideUp 1.75s cubic-bezier(.25,.8,.25,1) forwards; 
     z-index: 50;
     pointer-events: none;
   }
@@ -157,7 +158,7 @@
     border: none !important;
     object-fit: contain !important;
     will-change: transform;
-    animation: flyOffScreen 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards !important;
+    animation: flyOffScreen 2.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards !important;
   }
   @keyframes flyOffScreen{
     0%{ transform: translateY(0); opacity: 1; }
@@ -272,6 +273,17 @@
   }
   /* （文字・枠・ボタンはHTMLから削除済み） */
 
+  /* ---------- custom confirm modal (replaces window.confirm, which some in-app browsers block) ---------- */
+  .confirm-modal{ position:fixed; inset:0; z-index:3000; background:rgba(30,20,14,.5); display:flex; align-items:center; justify-content:center; padding:24px; }
+  .confirm-modal[hidden]{ display:none; }
+  .confirm-card{ background:var(--paper); border-radius:18px; padding:24px 20px 18px; max-width:300px; width:100%; text-align:center; box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  .confirm-card p{ margin:0 0 18px; font-family:'M PLUS Rounded 1c', sans-serif; font-weight:700; color:var(--ink); line-height:1.65; font-size:.92rem; }
+  .confirm-actions{ display:flex; gap:10px; }
+  .confirm-btn{ flex:1; padding:11px 10px; border-radius:999px; border:none; font-family:'M PLUS Rounded 1c', sans-serif; font-weight:800; font-size:.85rem; cursor:pointer; box-shadow:0 3px 6px rgba(0,0,0,.15); }
+  .confirm-btn--ghost{ background:#EDE6D6; color:var(--ink); }
+  .confirm-btn--danger{ background:var(--red); color:#fff; }
+  .confirm-btn:active{ transform:scale(.96); }
+
   @media (prefers-reduced-motion: reduce){
     .cell-content, .speech-bubble{ transition-duration:.01ms !important; }
     .cell.is-flying .cell-content{ animation:none; }
@@ -321,7 +333,7 @@
   <!-- SETTINGS SCREEN -->
   <section id="screen-settings" class="screen">
     <div class="settings-topbar">
-      <button type="button" id="settings-close-btn" class="icon-btn" aria-label="トップにもどる">←</button>
+      <button type="button" id="settings-close-btn" class="icon-btn" aria-label="トップにもどる">↩︎</button>
       <h2 class="settings-heading">せってい</h2>
       <span class="icon-btn-spacer"></span>
     </div>
@@ -368,12 +380,12 @@
   <!-- PLAYING SCREEN -->
   <section id="screen-playing" class="screen screen--playing">
     <div class="playing-topbar">
-      <button type="button" id="settings-back-btn" class="icon-btn" aria-label="トップに戻る">⚙️</button>
+      <button type="button" id="settings-back-btn" class="icon-btn" aria-label="トップに戻る">↩︎</button>
       <div class="badges">
         <div class="turn-badge" id="turn-badge" hidden><span id="turn-label">プレイヤー1</span>のばん</div>
         <div class="remain-badge">のこり <span id="remain-count">16</span></div>
       </div>
-      <button type="button" id="mute-btn" class="icon-btn" aria-label="音を切り替える">🔊</button>
+      <span class="icon-btn-spacer" aria-hidden="true"></span>
     </div>
 
     <p class="game-top-text">一人だけ怒るおじさんがいるよ</p>
@@ -396,6 +408,16 @@
 
 </div>
 
+<div id="confirm-modal" class="confirm-modal" hidden>
+  <div class="confirm-card">
+    <p>トップにもどりますか？<br>いまのゲームは終了します。</p>
+    <div class="confirm-actions">
+      <button type="button" id="confirm-cancel-btn" class="confirm-btn confirm-btn--ghost">つづける</button>
+      <button type="button" id="confirm-ok-btn" class="confirm-btn confirm-btn--danger">もどる</button>
+    </div>
+  </div>
+</div>
+
 <canvas id="crop-canvas" hidden></canvas>
 
 <script>
@@ -407,12 +429,14 @@
 
   /* ---------- default face styles ---------- */
   var FACE_STYLES = [
-    { id:'ojisan',     name:'ヒゲおじさん',     skin:'#F0C8A0', angrySkin:'#F5B8A8', hair:'#2B2118', hairStyle:'sides',     facial:'mustache',      accessory:null },
-    { id:'megane',     name:'メガネおじさん',   skin:'#F0C8A0', angrySkin:'#F5B8A8', hair:'#3A3A3A', hairStyle:'sidepart',  facial:'none',           accessory:'glasses' },
-    { id:'skinhead',   name:'スキンヘッド',     skin:'#E8B58C', angrySkin:'#F0A888', hair:'#2B2118', hairStyle:'bald',      facial:'goatee',         accessory:null },
-    { id:'hachimaki',  name:'ハチマキおじさん', skin:'#F0C8A0', angrySkin:'#F5B8A8', hair:'#2B2118', hairStyle:'spiky',     facial:'none',           accessory:'hachimaki' },
-    { id:'perm',       name:'パーマおじさん',   skin:'#EAC49A', angrySkin:'#F2B49C', hair:'#5A3A20', hairStyle:'perm',      facial:'thinmustache',   accessory:null },
-    { id:'sunglasses', name:'サングラス',       skin:'#DDB48A', angrySkin:'#E8A888', hair:'#1F1F1F', hairStyle:'slick',     facial:'goatee',         accessory:'sunglasses' }
+    { id:'tsurutsuru',  name:'つるつるおじさん',   skin:'#F0C0A8', angrySkin:'#F5A8A0', hair:'#2B2118', hairStyle:null,       facial:'mustacheThick', accessory:null },
+    { id:'megane',      name:'メガネおじさん',     skin:'#F0C0A8', angrySkin:'#F5A8A0', hair:'#3A3A3A', hairStyle:'tuftSide', facial:'none',          accessory:'glasses' },
+    { id:'sunglasses',  name:'サングラスおじさん', skin:'#DDB090', angrySkin:'#E89890', hair:'#1F1F1F', hairStyle:null,       facial:'goatee',        accessory:'sunglasses' },
+    { id:'hachimaki',   name:'ハチマキおじさん',   skin:'#F0C0A8', angrySkin:'#F5A8A0', hair:'#2B2118', hairStyle:null,       facial:'none',          accessory:'headband' },
+    { id:'chobihige',   name:'ちょびひげおじさん', skin:'#EAC098', angrySkin:'#F2A896', hair:'#5A3A20', hairStyle:'tuftPart', facial:'mustacheThin',  accessory:null },
+    { id:'momiage',     name:'もみあげおじさん',   skin:'#E8B890', angrySkin:'#F0A090', hair:'#2B2118', hairStyle:'chops',    facial:'none',          accessory:null },
+    { id:'panchiperm',  name:'パンチパーマおやじ', skin:'#E0B088', angrySkin:'#EC9888', hair:'#1F1F1F', hairStyle:'perm',     facial:'goatee',        accessory:null },
+    { id:'ganko',       name:'がんこおやじ',       skin:'#F0C0A8', angrySkin:'#F5A8A0', hair:'#2B2118', hairStyle:'tuftSide', facial:'mustacheThick', accessory:'glasses' }
   ];
   var faceCache = {};
   function getStyleById(id){
@@ -443,14 +467,16 @@
     cellCountGroup: document.getElementById('cell-count-group'),
     startBtn: document.getElementById('start-btn'),
     settingsBackBtn: document.getElementById('settings-back-btn'),
-    muteBtn: document.getElementById('mute-btn'),
     turnBadge: document.getElementById('turn-badge'),
     turnLabel: document.getElementById('turn-label'),
     remainCount: document.getElementById('remain-count'),
     crateGrid: document.getElementById('crate-grid'),
     resultFace: document.getElementById('result-face'),
     resultCard: document.querySelector('#screen-result .result-card'),
-    cropCanvas: document.getElementById('crop-canvas')
+    cropCanvas: document.getElementById('crop-canvas'),
+    confirmModal: document.getElementById('confirm-modal'),
+    confirmOkBtn: document.getElementById('confirm-ok-btn'),
+    confirmCancelBtn: document.getElementById('confirm-cancel-btn')
   };
 
   var state = {
@@ -464,6 +490,7 @@
     players: [],
     currentPlayerIndex: 0,
     angryIndex: -1,
+    lastAngryIndex: -1,
     openedSafe: 0,
     ended: false,
     muted: false
@@ -536,212 +563,363 @@
     });
   }
 
-  /* ---------- default face drawing (parameterized so many styles share one engine) ---------- */
-  function drawHead(ctx, size, style, isAngry){
+  /* ---------- default face drawing: bald "teardrop egghead" angry-uncle style ----------
+     Canvas is portrait (3:4, matches the game cell + uploaded-photo crop ratio).
+     A huge blank forehead, tiny furious eyes, and one dominant oversized nose
+     bunched together in the lower half is the whole joke, so proportions matter
+     more than anatomical correctness here. */
+  var INK = '#1A1410';
+
+  function drawHead(ctx, W, H, style, isAngry){
     var skin = isAngry ? style.angrySkin : style.skin;
-    ctx.fillStyle = skin;
+    var cx = W / 2;
+    var topY = H * 0.035;
+    var widestY = H * 0.44;
+    var widestHalfW = W * (isAngry ? 0.485 : 0.47);
+    var jawY = H * 0.70;
+    var jawHalfW = W * 0.395;
+    var chinY = H * 0.92;
+    var chinHalfW = W * 0.235;
+
     ctx.beginPath();
-    ctx.ellipse(size/2, size*0.52, size*(isAngry ? 0.42 : 0.40), size*(isAngry ? 0.46 : 0.44), 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * (isAngry ? 0.022 : 0.02);
-    ctx.stroke();
-    // ears
+    ctx.moveTo(cx, topY);
+    ctx.bezierCurveTo(cx + W*0.34, topY, cx + widestHalfW, H*0.20, cx + widestHalfW, widestY);
+    ctx.bezierCurveTo(cx + widestHalfW, widestY + H*0.10, cx + jawHalfW + W*0.05, jawY - H*0.06, cx + jawHalfW, jawY);
+    ctx.bezierCurveTo(cx + jawHalfW - W*0.06, jawY + H*0.09, cx + chinHalfW + W*0.05, chinY - H*0.05, cx + chinHalfW, chinY - H*0.02);
+    ctx.quadraticCurveTo(cx, chinY + H*0.035, cx - chinHalfW, chinY - H*0.02);
+    ctx.bezierCurveTo(cx - chinHalfW - W*0.05, chinY - H*0.05, cx - jawHalfW + W*0.06, jawY + H*0.09, cx - jawHalfW, jawY);
+    ctx.bezierCurveTo(cx - jawHalfW - W*0.05, jawY - H*0.06, cx - widestHalfW, widestY + H*0.10, cx - widestHalfW, widestY);
+    ctx.bezierCurveTo(cx - widestHalfW, H*0.20, cx - W*0.34, topY, cx, topY);
+    ctx.closePath();
     ctx.fillStyle = skin;
-    ctx.beginPath(); ctx.ellipse(size*0.13, size*0.52, size*0.065, size*0.10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.ellipse(size*0.87, size*0.52, size*0.065, size*0.10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fill();
+    ctx.strokeStyle = INK;
+    ctx.lineWidth = W * 0.017;
+    ctx.stroke();
+
+    // ears, set right at the widest point
+    ctx.fillStyle = skin;
+    ctx.lineWidth = W * 0.013;
+    [-1, 1].forEach(function(side){
+      var ex = cx + side * widestHalfW * 0.98;
+      var ey = H * 0.505;
+      ctx.beginPath();
+      ctx.moveTo(ex - side*W*0.01, ey - H*0.05);
+      ctx.quadraticCurveTo(ex + side*W*0.05, ey - H*0.03, ex + side*W*0.048, ey + H*0.005);
+      ctx.quadraticCurveTo(ex + side*W*0.045, ey + H*0.045, ex - side*W*0.005, ey + H*0.052);
+      ctx.quadraticCurveTo(ex - side*W*0.018, ey + H*0.01, ex - side*W*0.01, ey - H*0.05);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(ex + side*W*0.006, ey - H*0.018);
+      ctx.quadraticCurveTo(ex + side*W*0.026, ey, ex + side*W*0.008, ey + H*0.02);
+      ctx.stroke();
+    });
   }
-  function drawHair(ctx, size, style){
+
+  function drawHair(ctx, W, H, style){
+    var cx = W / 2;
     ctx.fillStyle = style.hair;
     switch (style.hairStyle){
-      case 'sides':
-        ctx.beginPath(); ctx.ellipse(size*0.18, size*0.32, size*0.06, size*0.04, -0.4, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.ellipse(size*0.82, size*0.32, size*0.06, size*0.04, 0.4, 0, Math.PI*2); ctx.fill();
+      case 'tuftSide':
+        [-1, 1].forEach(function(side){
+          ctx.beginPath();
+          ctx.moveTo(cx + side*W*0.34, H*0.185);
+          ctx.quadraticCurveTo(cx + side*W*0.44, H*0.20, cx + side*W*0.46, H*0.29);
+          ctx.quadraticCurveTo(cx + side*W*0.42, H*0.33, cx + side*W*0.37, H*0.30);
+          ctx.quadraticCurveTo(cx + side*W*0.39, H*0.23, cx + side*W*0.34, H*0.185);
+          ctx.closePath(); ctx.fill();
+        });
         break;
-      case 'sidepart':
+      case 'tuftPart':
         ctx.beginPath();
-        ctx.moveTo(size*0.16, size*0.30);
-        ctx.quadraticCurveTo(size*0.30, size*0.05, size*0.56, size*0.09);
-        ctx.quadraticCurveTo(size*0.76, size*0.11, size*0.84, size*0.28);
-        ctx.quadraticCurveTo(size*0.55, size*0.15, size*0.16, size*0.30);
+        ctx.moveTo(cx - W*0.30, H*0.155);
+        ctx.quadraticCurveTo(cx - W*0.10, H*0.02, cx + W*0.16, H*0.055);
+        ctx.quadraticCurveTo(cx + W*0.33, H*0.08, cx + W*0.37, H*0.185);
+        ctx.quadraticCurveTo(cx + W*0.04, H*0.075, cx - W*0.30, H*0.155);
         ctx.closePath(); ctx.fill();
         break;
-      case 'bald':
-        ctx.fillStyle = 'rgba(255,255,255,.55)';
-        ctx.beginPath(); ctx.ellipse(size*0.42, size*0.21, size*0.10, size*0.045, -0.2, 0, Math.PI*2); ctx.fill();
-        break;
-      case 'spiky':
-        for (var i = 0; i < 5; i++){
-          var bx = size*(0.30 + i*0.10);
+      case 'chops':
+        [-1, 1].forEach(function(side){
           ctx.beginPath();
-          ctx.moveTo(bx - size*0.035, size*0.22);
-          ctx.lineTo(bx, size*0.06);
-          ctx.lineTo(bx + size*0.035, size*0.22);
+          ctx.moveTo(cx + side*W*0.455, H*0.30);
+          ctx.quadraticCurveTo(cx + side*W*0.50, H*0.46, cx + side*W*0.44, H*0.60);
+          ctx.quadraticCurveTo(cx + side*W*0.40, H*0.62, cx + side*W*0.37, H*0.58);
+          ctx.quadraticCurveTo(cx + side*W*0.42, H*0.44, cx + side*W*0.40, H*0.31);
           ctx.closePath(); ctx.fill();
-        }
+        });
         break;
       case 'perm':
-        for (var j = 0; j < 7; j++){
-          var cx = size*(0.23 + j*0.077);
-          var cy = size*(0.20 + (j % 2)*0.035);
-          ctx.beginPath(); ctx.arc(cx, cy, size*0.052, 0, Math.PI*2); ctx.fill();
+        for (var j = 0; j < 8; j++){
+          var px = cx + (j - 3.5) * W*0.068;
+          var py = H*(0.09 + (j % 2) * 0.025);
+          ctx.beginPath(); ctx.arc(px, py, W*0.042, 0, Math.PI*2); ctx.fill();
         }
         break;
-      case 'slick':
+    }
+  }
+
+  function drawForeheadMarks(ctx, W, H){
+    var cx = W / 2;
+    var mx = cx + W*0.185, my = H*0.175;
+    ctx.strokeStyle = INK;
+    ctx.lineCap = 'round';
+    // anger cross
+    ctx.lineWidth = W*0.017;
+    ctx.beginPath();
+    ctx.moveTo(mx - W*0.032, my); ctx.lineTo(mx + W*0.032, my);
+    ctx.moveTo(mx, my - H*0.022); ctx.lineTo(mx, my + H*0.022);
+    ctx.stroke();
+    // furrowed-brow squiggle, just above the eyebrows
+    var wx = cx + W*0.01, wy = H*0.285;
+    ctx.lineWidth = W*0.009;
+    ctx.beginPath();
+    ctx.moveTo(wx - W*0.022, wy - H*0.012); ctx.lineTo(wx - W*0.007, wy + H*0.006);
+    ctx.moveTo(wx - W*0.002, wy - H*0.014); ctx.lineTo(wx + W*0.013, wy + H*0.007);
+    ctx.stroke();
+  }
+
+  function drawEyebrows(ctx, W, H, isAngry){
+    var cx = W / 2;
+    var y = H * (isAngry ? 0.315 : 0.33);
+    ctx.fillStyle = INK;
+    [-1, 1].forEach(function(side){
+      ctx.beginPath();
+      if (isAngry){
+        ctx.moveTo(cx + side*W*0.205, y - H*0.022);
+        ctx.lineTo(cx + side*W*0.05, y + H*0.028);
+        ctx.lineTo(cx + side*W*0.058, y + H*0.048);
+        ctx.lineTo(cx + side*W*0.225, y + H*0.006);
+      } else {
+        ctx.moveTo(cx + side*W*0.19, y - H*0.006);
+        ctx.lineTo(cx + side*W*0.055, y + H*0.013);
+        ctx.lineTo(cx + side*W*0.06, y + H*0.031);
+        ctx.lineTo(cx + side*W*0.20, y + H*0.017);
+      }
+      ctx.closePath();
+      ctx.fill();
+    });
+  }
+
+  function drawEyes(ctx, W, H, isAngry){
+    var cx = W / 2;
+    var y = H * 0.378;
+    var dx = W * 0.13;
+    [-1, 1].forEach(function(side){
+      var ex = cx + side*dx;
+      ctx.fillStyle = INK;
+      ctx.beginPath();
+      ctx.ellipse(ex, y, W*0.032, H*(isAngry ? 0.017 : 0.014), side*0.15, 0, Math.PI*2);
+      ctx.fill();
+      if (isAngry){
+        ctx.fillStyle = '#FFF';
         ctx.beginPath();
-        ctx.moveTo(size*0.14, size*0.31);
-        ctx.quadraticCurveTo(size*0.5, size*0.03, size*0.86, size*0.31);
-        ctx.quadraticCurveTo(size*0.5, size*0.17, size*0.14, size*0.31);
-        ctx.closePath(); ctx.fill();
-        break;
-    }
+        ctx.moveTo(ex + side*W*0.026, y - H*0.009);
+        ctx.quadraticCurveTo(ex + side*W*0.046, y, ex + side*W*0.026, y + H*0.009);
+        ctx.quadraticCurveTo(ex + side*W*0.018, y, ex + side*W*0.026, y - H*0.009);
+        ctx.closePath();
+        ctx.fill();
+      }
+    });
   }
-  function drawForeheadMarks(ctx, size){
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * 0.018;
-    ctx.lineCap = 'round';
+
+  function drawNose(ctx, W, H, isAngry){
+    // the whole joke: one oversized nose eating the lower-middle of the face
+    var cx = W / 2;
+    var bridgeTopY = H * 0.385;
+    var tipY = H * (isAngry ? 0.685 : 0.665);
+    var bridgeHalfW = W * 0.05;
+    var tipHalfW = W * 0.115;
+
+    ctx.strokeStyle = INK;
+    ctx.lineWidth = W * 0.014;
+    ctx.lineJoin = 'round';
+    [-1, 1].forEach(function(side){
+      ctx.beginPath();
+      ctx.moveTo(cx + side*bridgeHalfW, bridgeTopY);
+      ctx.quadraticCurveTo(cx + side*bridgeHalfW*1.15, H*0.53, cx + side*tipHalfW*0.72, tipY - H*0.02);
+      ctx.stroke();
+    });
     ctx.beginPath();
-    ctx.moveTo(size*0.58, size*0.18); ctx.lineTo(size*0.66, size*0.26);
-    ctx.moveTo(size*0.66, size*0.18); ctx.lineTo(size*0.58, size*0.26);
-    ctx.moveTo(size*0.68, size*0.22); ctx.lineTo(size*0.76, size*0.30);
-    ctx.moveTo(size*0.76, size*0.22); ctx.lineTo(size*0.68, size*0.30);
+    ctx.moveTo(cx - tipHalfW*0.72, tipY - H*0.02);
+    ctx.quadraticCurveTo(cx - tipHalfW, tipY + H*0.032, cx - tipHalfW*0.52, tipY + H*0.048);
+    ctx.quadraticCurveTo(cx, tipY + H*0.062, cx + tipHalfW*0.52, tipY + H*0.048);
+    ctx.quadraticCurveTo(cx + tipHalfW, tipY + H*0.032, cx + tipHalfW*0.72, tipY - H*0.02);
     ctx.stroke();
+    [-1, 1].forEach(function(side){
+      ctx.beginPath();
+      ctx.ellipse(cx + side*tipHalfW*0.44, tipY + H*0.028, W*0.017, H*0.011, side*0.3, 0, Math.PI*2);
+      ctx.stroke();
+    });
   }
-  function drawEyebrows(ctx, size, isAngry){
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineCap = 'round';
+
+  function drawStubbleShadow(ctx, W, H, isAngry){
+    var cx = W / 2;
+    ctx.save();
+    ctx.globalAlpha = 0.30;
+    ctx.fillStyle = '#8B6B72';
     ctx.beginPath();
-    if (isAngry){
-      ctx.lineWidth = size * 0.035;
-      ctx.moveTo(size*0.22, size*0.38); ctx.lineTo(size*0.42, size*0.42);
-      ctx.moveTo(size*0.78, size*0.38); ctx.lineTo(size*0.58, size*0.42);
-    } else {
-      ctx.lineWidth = size * 0.028;
-      ctx.moveTo(size*0.26, size*0.40); ctx.lineTo(size*0.42, size*0.39);
-      ctx.moveTo(size*0.74, size*0.40); ctx.lineTo(size*0.58, size*0.39);
-    }
-    ctx.stroke();
-  }
-  function drawEyes(ctx, size, isAngry){
-    ctx.fillStyle = '#2B2118';
-    if (isAngry){
-      ctx.beginPath(); ctx.ellipse(size*0.34, size*0.48, size*0.05, size*0.035, -0.2, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.ellipse(size*0.66, size*0.48, size*0.05, size*0.035, 0.2, 0, Math.PI*2); ctx.fill();
-    } else {
-      ctx.beginPath(); ctx.ellipse(size*0.35, size*0.48, size*0.045, size*0.032, 0, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.ellipse(size*0.65, size*0.48, size*0.045, size*0.032, 0, 0, Math.PI*2); ctx.fill();
+    ctx.ellipse(cx, H*0.715, W*0.175, H*0.05, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = isAngry ? '#6B4A50' : '#B08A78';
+    for (var i = 0; i < 22; i++){
+      var sx = cx + (Math.random()*2 - 1) * W*0.15;
+      var sy = H*0.685 + Math.random() * H*0.05;
+      ctx.beginPath(); ctx.arc(sx, sy, W*0.0038, 0, Math.PI*2); ctx.fill();
     }
   }
-  function drawNose(ctx, size, isAngry){
-    ctx.strokeStyle = '#2B2118';
-    ctx.lineWidth = size * (isAngry ? 0.02 : 0.016);
-    ctx.beginPath();
+
+  function drawMouth(ctx, W, H, isAngry){
+    var cx = W / 2;
+    var y = H * (isAngry ? 0.785 : 0.775);
+    var halfW = W * 0.10;
     if (isAngry){
-      ctx.moveTo(size*0.5, size*0.48); ctx.quadraticCurveTo(size*0.58, size*0.62, size*0.46, size*0.66);
-    } else {
-      ctx.moveTo(size*0.5, size*0.50); ctx.quadraticCurveTo(size*0.56, size*0.60, size*0.47, size*0.64);
-    }
-    ctx.stroke();
-  }
-  function drawMouth(ctx, size, isAngry){
-    if (isAngry){
-      ctx.fillStyle = '#E88A5A';
-      ctx.beginPath(); ctx.ellipse(size/2, size*0.78, size*0.18, size*0.08, 0, 0, Math.PI*2); ctx.fill();
-      ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.018; ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx - halfW, y);
+      ctx.quadraticCurveTo(cx, y + H*0.035, cx + halfW, y);
+      ctx.quadraticCurveTo(cx, y + H*0.065, cx - halfW, y);
+      ctx.closePath();
+      ctx.fillStyle = '#D98A55';
+      ctx.fill();
+      ctx.strokeStyle = INK; ctx.lineWidth = W*0.013; ctx.stroke();
       ctx.fillStyle = '#FFF';
-      ctx.fillRect(size*0.38, size*0.74, size*0.24, size*0.07);
-      ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.012;
-      ctx.strokeRect(size*0.38, size*0.74, size*0.24, size*0.07);
-      ctx.beginPath();
-      ctx.moveTo(size*0.44, size*0.74); ctx.lineTo(size*0.44, size*0.81);
-      ctx.moveTo(size*0.50, size*0.74); ctx.lineTo(size*0.50, size*0.81);
-      ctx.moveTo(size*0.56, size*0.74); ctx.lineTo(size*0.56, size*0.81);
-      ctx.stroke();
+      ctx.fillRect(cx - halfW*0.72, y + H*0.006, halfW*1.44, H*0.026);
+      ctx.strokeStyle = INK; ctx.lineWidth = W*0.007;
+      ctx.strokeRect(cx - halfW*0.72, y + H*0.006, halfW*1.44, H*0.026);
+      [-0.5, 0, 0.5].forEach(function(t){
+        ctx.beginPath();
+        ctx.moveTo(cx + t*halfW, y + H*0.006);
+        ctx.lineTo(cx + t*halfW, y + H*0.032);
+        ctx.stroke();
+      });
     } else {
-      ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.02;
+      ctx.strokeStyle = INK; ctx.lineWidth = W*0.014;
       ctx.beginPath();
-      ctx.arc(size/2, size*0.68, size*0.13, 0.15*Math.PI, 0.85*Math.PI);
+      ctx.arc(cx, y - H*0.008, halfW*0.82, 0.12*Math.PI, 0.88*Math.PI);
       ctx.stroke();
     }
   }
-  function drawFacial(ctx, size, style){
+
+  function drawFacial(ctx, W, H, style){
+    var cx = W / 2;
     ctx.fillStyle = style.hair;
     switch (style.facial){
-      case 'mustache':
-        ctx.beginPath();
-        ctx.moveTo(size*0.38, size*0.60);
-        ctx.quadraticCurveTo(size*0.5, size*0.665, size*0.62, size*0.60);
-        ctx.quadraticCurveTo(size*0.5, size*0.635, size*0.38, size*0.60);
-        ctx.closePath(); ctx.fill();
+      case 'mustacheThick':
+        [-1, 1].forEach(function(side){
+          ctx.beginPath();
+          ctx.moveTo(cx, H*0.726);
+          ctx.quadraticCurveTo(cx + side*W*0.05, H*0.712, cx + side*W*0.10, H*0.722);
+          ctx.quadraticCurveTo(cx + side*W*0.145, H*0.732, cx + side*W*0.15, H*0.752);
+          ctx.quadraticCurveTo(cx + side*W*0.11, H*0.744, cx + side*W*0.075, H*0.748);
+          ctx.quadraticCurveTo(cx + side*W*0.035, H*0.752, cx, H*0.740);
+          ctx.closePath(); ctx.fill();
+        });
         break;
-      case 'thinmustache':
+      case 'mustacheThin':
         ctx.strokeStyle = style.hair;
-        ctx.lineWidth = size * 0.016;
+        ctx.lineWidth = W*0.011;
         ctx.lineCap = 'round';
         ctx.beginPath();
-        ctx.moveTo(size*0.40, size*0.605); ctx.lineTo(size*0.60, size*0.605);
+        ctx.moveTo(cx - W*0.10, H*0.748); ctx.quadraticCurveTo(cx, H*0.735, cx + W*0.10, H*0.748);
         ctx.stroke();
         break;
       case 'goatee':
         ctx.beginPath();
-        ctx.ellipse(size*0.5, size*0.80, size*0.075, size*0.10, 0, 0, Math.PI*2);
-        ctx.fill();
+        ctx.moveTo(cx - W*0.075, H*0.825);
+        ctx.quadraticCurveTo(cx - W*0.085, H*0.875, cx - W*0.03, H*0.905);
+        ctx.quadraticCurveTo(cx, H*0.918, cx + W*0.03, H*0.905);
+        ctx.quadraticCurveTo(cx + W*0.085, H*0.875, cx + W*0.075, H*0.825);
+        ctx.quadraticCurveTo(cx, H*0.845, cx - W*0.075, H*0.825);
+        ctx.closePath(); ctx.fill();
         break;
     }
   }
-  function drawAccessory(ctx, size, style){
+
+  function drawAccessory(ctx, W, H, style){
+    var cx = W / 2;
+    var y = H * 0.378;
     switch (style.accessory){
       case 'glasses':
-        ctx.strokeStyle = '#2B2118'; ctx.lineWidth = size * 0.018;
-        ctx.beginPath(); ctx.ellipse(size*0.35, size*0.48, size*0.09, size*0.07, 0, 0, Math.PI*2); ctx.stroke();
-        ctx.beginPath(); ctx.ellipse(size*0.65, size*0.48, size*0.09, size*0.07, 0, 0, Math.PI*2); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(size*0.44, size*0.48); ctx.lineTo(size*0.56, size*0.48); ctx.stroke();
+        ctx.strokeStyle = INK; ctx.lineWidth = W*0.015;
+        [-1, 1].forEach(function(side){
+          ctx.beginPath(); ctx.ellipse(cx + side*W*0.13, y, W*0.068, H*0.05, 0, 0, Math.PI*2); ctx.stroke();
+        });
+        ctx.beginPath(); ctx.moveTo(cx - W*0.06, y); ctx.lineTo(cx + W*0.06, y); ctx.stroke();
         break;
       case 'sunglasses':
         ctx.fillStyle = '#1a1a1a';
-        ctx.beginPath(); ctx.ellipse(size*0.35, size*0.48, size*0.10, size*0.075, 0, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.ellipse(size*0.65, size*0.48, size*0.10, size*0.075, 0, 0, Math.PI*2); ctx.fill();
-        ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = size * 0.02;
-        ctx.beginPath(); ctx.moveTo(size*0.45, size*0.48); ctx.lineTo(size*0.55, size*0.48); ctx.stroke();
+        [-1, 1].forEach(function(side){
+          ctx.beginPath(); ctx.ellipse(cx + side*W*0.13, y, W*0.075, H*0.056, 0, 0, Math.PI*2); ctx.fill();
+        });
+        ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = W*0.017;
+        ctx.beginPath(); ctx.moveTo(cx - W*0.055, y); ctx.lineTo(cx + W*0.055, y); ctx.stroke();
         break;
-      case 'hachimaki':
+      case 'headband':
         ctx.fillStyle = '#E8432F';
-        ctx.fillRect(size*0.10, size*0.185, size*0.80, size*0.085);
-        ctx.beginPath(); ctx.ellipse(size*0.87, size*0.22, size*0.028, size*0.05, 0.3, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx - W*0.34, H*0.165);
+        ctx.quadraticCurveTo(cx, H*0.095, cx + W*0.34, H*0.165);
+        ctx.lineTo(cx + W*0.34, H*0.225);
+        ctx.quadraticCurveTo(cx, H*0.155, cx - W*0.34, H*0.225);
+        ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(cx + W*0.37, H*0.195, W*0.022, H*0.036, 0.3, 0, Math.PI*2); ctx.fill();
         break;
     }
   }
-  function drawStubble(ctx, size, isAngry){
-    ctx.fillStyle = isAngry ? '#8B5A4A' : '#C49A7A';
-    var count = isAngry ? 18 : 12;
-    var spanX = isAngry ? 0.24 : 0.20;
-    var spanY = isAngry ? 0.06 : 0.05;
-    var baseY = isAngry ? 0.68 : 0.66;
-    for (var i = 0; i < count; i++){
-      var sx = size*((isAngry ? 0.38 : 0.40) + Math.random()*spanX);
-      var sy = size*(baseY + Math.random()*spanY);
-      ctx.beginPath(); ctx.arc(sx, sy, size*(isAngry ? 0.006 : 0.005), 0, Math.PI*2); ctx.fill();
-    }
+
+  function drawCheekLines(ctx, W, H){
+    var cx = W / 2;
+    ctx.strokeStyle = 'rgba(26,20,16,0.5)';
+    ctx.lineWidth = W*0.007;
+    ctx.lineCap = 'round';
+    [-1, 1].forEach(function(side){
+      ctx.beginPath();
+      ctx.moveTo(cx + side*W*0.235, H*0.705);
+      ctx.quadraticCurveTo(cx + side*W*0.265, H*0.75, cx + side*W*0.23, H*0.795);
+      ctx.stroke();
+    });
   }
+
+  function drawBottomShadow(ctx, W, H, isAngry){
+    var cx = W / 2;
+    var grad = ctx.createLinearGradient(0, H*0.82, 0, H*0.95);
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, isAngry ? 'rgba(120,55,65,0.38)' : 'rgba(110,85,75,0.16)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(cx, H*0.90, W*0.30, H*0.10, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(26,20,16,0.4)';
+    ctx.lineWidth = W*0.009;
+    ctx.beginPath();
+    ctx.moveTo(cx - W*0.20, H*0.895);
+    ctx.quadraticCurveTo(cx, H*0.915, cx + W*0.20, H*0.895);
+    ctx.stroke();
+  }
+
   function generateFaceDataURL(style, isAngry){
-    var size = 400;
+    var W = 360, H = 480;
     var canvas = els.cropCanvas;
-    canvas.width = size;
-    canvas.height = size;
+    canvas.width = W;
+    canvas.height = H;
     var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, size, size);
-    drawHead(ctx, size, style, isAngry);
-    drawHair(ctx, size, style);
-    if (isAngry) drawForeheadMarks(ctx, size);
-    drawEyebrows(ctx, size, isAngry);
-    drawEyes(ctx, size, isAngry);
-    drawNose(ctx, size, isAngry);
-    drawMouth(ctx, size, isAngry);
-    drawFacial(ctx, size, style);
-    drawAccessory(ctx, size, style);
-    drawStubble(ctx, size, isAngry);
+    ctx.clearRect(0, 0, W, H);
+    drawHead(ctx, W, H, style, isAngry);
+    drawHair(ctx, W, H, style);
+    drawEyebrows(ctx, W, H, isAngry);
+    drawEyes(ctx, W, H, isAngry);
+    drawNose(ctx, W, H, isAngry);
+    drawStubbleShadow(ctx, W, H, isAngry);
+    drawMouth(ctx, W, H, isAngry);
+    drawFacial(ctx, W, H, style);
+    drawAccessory(ctx, W, H, style);
+    if (isAngry) drawForeheadMarks(ctx, W, H);
+    drawCheekLines(ctx, W, H);
+    drawBottomShadow(ctx, W, H, isAngry);
     return canvas.toDataURL('image/png');
   }
+
 
   /* ---------- audio & haptics ---------- */
   var audioCtx = null;
@@ -828,13 +1006,14 @@
     els.resultCard.addEventListener('click', function(){ startGame(); });
   }
   els.settingsBackBtn.addEventListener('click', function(){
-    if (window.confirm('トップにもどりますか？いまのゲームは終了します。')){
-      showScreen('screen-top');
-    }
+    els.confirmModal.hidden = false;
   });
-  els.muteBtn.addEventListener('click', function(){
-    state.muted = !state.muted;
-    els.muteBtn.textContent = state.muted ? '🔇' : '🔊';
+  els.confirmCancelBtn.addEventListener('click', function(){
+    els.confirmModal.hidden = true;
+  });
+  els.confirmOkBtn.addEventListener('click', function(){
+    els.confirmModal.hidden = true;
+    showScreen('screen-top');
   });
 
   /* ---------- settings interactions ---------- */
@@ -933,6 +1112,16 @@
     });
   }
 
+  function pickAngryIndex(numCells, avoidIndex){
+    if (numCells <= 1) return 0;
+    var idx = Math.floor(Math.random() * numCells);
+    // 直前と同じマスが連続で当たると「ランダムに見えない」ので、その場合だけ引き直す
+    if (idx === avoidIndex){
+      idx = (idx + 1 + Math.floor(Math.random() * (numCells - 1))) % numCells;
+    }
+    return idx;
+  }
+
   /* ---------- game logic ---------- */
   function startGame(){
     state.normalFaceSrc = state.customNormalSrc || getStyleFaceDataURL(state.selectedStyleId, false);
@@ -941,7 +1130,8 @@
     state.players = [];
     for (var p = 0; p < state.numPlayers; p++){ state.players.push('プレイヤー' + (p + 1)); }
     state.currentPlayerIndex = 0;
-    state.angryIndex = Math.floor(Math.random() * state.numCells);
+    state.angryIndex = pickAngryIndex(state.numCells, state.lastAngryIndex);
+    state.lastAngryIndex = state.angryIndex;
     state.openedSafe = 0;
     state.ended = false;
 
@@ -1026,7 +1216,7 @@
         state.openedSafe++;
         updateRemainUI();
         nextPlayer();
-      }, 1500);
+      }, 2500);
     }
   }
 
